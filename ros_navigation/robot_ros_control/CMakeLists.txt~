@@ -1,0 +1,79 @@
+cmake_minimum_required(VERSION 2.8.3)
+project(arm_ros_control)
+
+find_package(catkin REQUIRED COMPONENTS
+  cmake_modules
+  hardware_interface
+  controller_manager
+  roscpp
+  control_msgs
+  trajectory_msgs
+  actionlib
+  urdf
+  joint_limits_interface
+  transmission_interface
+  control_toolbox
+  std_msgs
+  sensor_msgs
+ rosparam_shortcuts
+)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
+find_package(Eigen3 REQUIRED)
+
+## System dependencies are found with CMake's conventions
+# find_package(Boost REQUIRED COMPONENTS system)
+
+catkin_package(
+  INCLUDE_DIRS
+    include
+  CATKIN_DEPENDS
+    hardware_interface
+    controller_manager
+    roscpp
+    control_msgs
+    trajectory_msgs
+    urdf
+    joint_limits_interface
+    transmission_interface
+    control_toolbox
+    std_msgs
+    sensor_msgs
+ rosparam_shortcuts
+)
+
+###########
+## Build ##
+###########
+
+include_directories(
+  include/
+  ${catkin_INCLUDE_DIRS}
+)
+
+# G500CSIP Hardware Interface
+add_library(arm_hw_interface src/ArmHW.cpp)
+target_link_libraries(arm_hw_interface ${catkin_LIBRARIES})
+
+# Main control executable
+add_executable(arm_controller src/ArmConrtroller.cpp)
+target_link_libraries(arm_controller arm_hw_interface ${catkin_LIBRARIES})
+
+## Install ------------------------------------------------------------
+
+# Install libraries
+install(TARGETS
+    arm_hw_interface
+  LIBRARY DESTINATION
+    ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+# Install executables
+install(TARGETS
+   arm_controller
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+# Install header files
+install(DIRECTORY include/${PROJECT_NAME}/   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

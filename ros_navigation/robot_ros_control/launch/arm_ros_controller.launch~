@@ -1,0 +1,20 @@
+<launch>	
+
+<!-- Load URDF TODO: replace the path with your URDF path -->
+<param name="robot_description" textfile="$(find arm_ros_control)/urdf/arm.urdf" />
+
+<!-- Show in Rviz  -->
+<node name="rviz" pkg="rviz" type="rviz"/>
+
+<rosparam file="$(find arm_ros_control)/config/controller.yaml" command="load"/>
+
+<!-- Load hardware interface -->
+<node name="arm_controller" pkg="arm_ros_control" type="arm_controller" output="screen"/>
+
+<!-- Load controller manager TODO: add to the args the controllers you want to launch, names have to match the ones in your yaml file  -->
+<node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false"
+	  output="screen" args="spawn"/>
+ 
+  
+</launch>
+

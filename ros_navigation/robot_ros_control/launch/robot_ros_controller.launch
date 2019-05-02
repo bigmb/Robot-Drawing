@@ -1,0 +1,21 @@
+<launch>
+<param name="robot_description" textfile="$(find robot_ros_control)/urdf/robot.urdf" />
+  <node pkg="rviz" type="rviz" name="rviz" output="screen">
+     <rosparam param="rate">8.0</rosparam>
+     <rosparam param="base_width">0.245</rosparam>
+  </node>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" /> 
+
+
+<rosparam file="$(find arm_ros_control)/config/controller.yaml" command="load"/>
+
+<!-- Load hardware interface -->
+<node name="robot_controller" pkg="robot_ros_control" type="robot_controller" output="screen"/>
+
+<rosparam file="$(find robot_ros_control)/config/differential_drive_controller.yaml" command="load"/>
+
+<!-- Load controller manager TODO: add to the args the controllers you want to launch, names have to match the ones in your yaml file  -->
+<node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false"
+	  output="screen" args="spawn mobile_base_controller"/>
+
+</launch>
