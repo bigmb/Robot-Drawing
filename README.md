@@ -1,2 +1,3 @@
-# Robot-Drawing-
-Drawing any image using Navigation Stack 
+# Robot-Drawing
+
+Drawing any image by thresholding corners using ROS Navigation Stack 
